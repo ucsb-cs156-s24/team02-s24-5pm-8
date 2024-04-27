@@ -22,6 +22,10 @@ COPY frontend /home/app/frontend
 COPY lombok.config /home/app
 COPY pom.xml /home/app
 
+RUN mvn -B -f /home/app/pom.xml clean compile
+RUN mvn -B -f /home/app/pom.xml liquibase:updateSQL
+RUN mvn -B -f /home/app/pom.xml liquibase:update
 RUN mvn -B -Pproduction -Ph2 -DskipTests -f /home/app/pom.xml clean package
+
 
 ENTRYPOINT ["java","-jar","/home/app/target/team02-1.0.0.jar"]
