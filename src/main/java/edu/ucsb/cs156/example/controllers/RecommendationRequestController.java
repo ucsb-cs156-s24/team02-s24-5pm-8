@@ -32,12 +32,11 @@ import java.time.LocalDateTime;
 @RestController
 @Slf4j
 public class RecommendationRequestController extends ApiController {
-    
 
     @Autowired
     RecommendationRequestRepository recommendationRequestRepository;
 
-    @Operation(summary= "List all recommendation requests")
+    @Operation(summary = "List all recommendation requests")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public Iterable<RecommendationRequest> allRecommendationRequests() {
@@ -45,31 +44,32 @@ public class RecommendationRequestController extends ApiController {
         return requests;
     }
 
-    @Operation(summary= "Create a new recommendation request")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Create a new recommendation request")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/post")
-    public RecommendationRequest postRecommendationRequest(
-            @Parameter(name="requesterEmail") @RequestParam String requesterEmail,
-            @Parameter(name="professorEmail") @RequestParam String professorEmail,
-            @Parameter(name="explanation") @RequestParam String explanation,
-            @Parameter(name="dateRequested (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("dateRequested") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRequested,
-            @Parameter(name="dateNeeded (in iso format, e.g. YYYY-mm-ddTHH:MM:SS; see https://en.wikipedia.org/wiki/ISO_8601)") @RequestParam("dateNeeded") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateNeeded)
+    public RecommendationRequest postRecommendationDate(
+            @Parameter(name = "requesterEmail") @RequestParam String requesterEmail,
+            @Parameter(name = "professorEmail") @RequestParam String professorEmail,
+            @Parameter(name = "explanation") @RequestParam String explanation,
+            @Parameter(name = "dateRequested") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateRequested,
+            @Parameter(name = "dateNeeded") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateNeeded,
+            @Parameter(name = "done") @RequestParam boolean done) 
+            
             throws JsonProcessingException {
+        RecommendationRequest requestToPost = new RecommendationRequest();
+        
+        log.info("dateRequested:", dateRequested);
+        log.info("dateNeeded:", dateNeeded);
 
-        log.info("dateRequested={}", dateRequested);
-        log.info("dateNeeded={}", dateNeeded);
+        requestToPost.setRequesterEmail(requesterEmail);
+        requestToPost.setProfessorEmail(professorEmail);
+        requestToPost.setExplanation(explanation);
+        requestToPost.setDateRequested(dateRequested);
+        requestToPost.setDateNeeded(dateNeeded);
+        requestToPost.setDone(done);
 
-        RecommendationRequest request = RecommendationRequest.builder()
-                .requesterEmail(requesterEmail)
-                .professorEmail(professorEmail)
-                .explanation(explanation)
-                .dateRequested(dateRequested)
-                .dateNeeded(dateNeeded)
-                .done(false)
-                .build();
+        RecommendationRequest savedRequest = recommendationRequestRepository.save(requestToPost);
 
-        recommendationRequestRepository.save(request);
-        return request;
+        return savedRequest;
     }
-    
 }
