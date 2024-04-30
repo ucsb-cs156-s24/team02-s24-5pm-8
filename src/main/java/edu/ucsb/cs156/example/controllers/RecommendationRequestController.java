@@ -85,4 +85,18 @@ public class RecommendationRequestController extends ApiController {
 
         return savedRequest;
     }
+/*In RecommendationRequestController.java there is code for an
+endpoint DELETE /api/RecommendationRequest?id=123 endpoint
+that deletes the record if it exists, and returns 200 (ok) and
+the text record 123 deleted, or returns 404 (Not Found) and
+the text record 123 not found if it does not. */
+    @Operation(summary = "Delete a recommendation request")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/delete")
+    public Object deleteRecommendationRequest(@Parameter(name = "id") @RequestParam long id) {
+        RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
+        recommendationRequestRepository.delete(request);
+        return genericMessage("record %s deleted".formatted(id));
+    }
+
 }
