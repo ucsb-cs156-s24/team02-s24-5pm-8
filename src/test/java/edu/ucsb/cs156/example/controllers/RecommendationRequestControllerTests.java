@@ -247,7 +247,78 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     }
 
 
+    //Tests for PUT /api/recommendationrequests/put
+    @Test
+    public void logged_out_users_cannot_put() throws Exception {
+        mockMvc.perform(put("/api/recommendationrequests/put?id=1&requesterEmail=requesterEmail&professorEmail=professorEmail&explanation=explanation&dateRequested=2024-04-26T08:08:00&dateNeeded=2024-04-27T08:08:00&done=true"))
+                .andExpect(status().is(403));
+    }
 
+    @Test
+    @WithMockUser(roles = { "USER" })
+    public void logged_in_regular_users_cannot_put() throws Exception {
+        mockMvc.perform(put("/api/recommendationrequests/put?id=1&requesterEmail=requesterEmail&professorEmail=professorEmail&explanation=explanation&dateRequested=2024-04-26T08:08:00&dateNeeded=2024-04-27T08:08:00&done=true"))
+                .andExpect(status().is(403));
+    }
+
+
+    @Test
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    public void admin_can_edit_recommendation_request() throws Exception {
+        LocalDateTime expectedRequested = LocalDateTime.parse("2024-04-26T08:08:00");
+        LocalDateTime expectedNeeded = LocalDateTime.parse("2024-04-27T08:08:00");
+
+        RecommendationRequest expected = new RecommendationRequest();
+        expected.setId(6L);
+        expected.setRequesterEmail("requesterEmail");
+        expected.setProfessorEmail("professorEmail");
+        expected.setExplanation("explanation");
+        expected.setDateRequested(expectedNeeded);
+        expected.setDateNeeded(expectedRequested);
+        expected.setDone(true);
+
+        when(recommendationRequestRepository.findById(3L)).thenReturn(Optional.of(expected));
+
+        // act
+        MvcResult result = mockMvc.perform(put("/api/recommendationrequests/put?id=6&requesterEmail=requesterEmail&professorEmail=professorEmail&explanation=explanation&dateRequested=2024-04-26T08:08:00&dateNeeded=2024-04-27T08:08:00&done=true")).andExpect(status().is(200)).andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(6L);
+        verify(recommendationRequestRepository, times(1)).save(eq(expected));
+        String expectedJson = mapper.writeValueAsString(expected);
+        String responseString = result.getResponse().getContentAsString();
+        assertEquals(expectedJson, responseString);
+    }
+
+
+    @Test
+    @WithMockUser(roles = { "ADMIN", "USER" })
+    public void admin_user_cant_find_recommendation_request_to_edit() throws Exception {
+        LocalDateTime expectedRequested = LocalDateTime.parse("2024-04-26T08:08:00");
+        LocalDateTime expectedNeeded = LocalDateTime.parse("2024-04-27T08:08:00");
+
+        RecommendationRequest expected = new RecommendationRequest();
+        expected.setId(3L);
+        expected.setRequesterEmail("requesterEmail");
+        expected.setProfessorEmail("professorEmail");
+        expected.setExplanation("explanation");
+        expected.setDateRequested(expectedNeeded);
+        expected.setDateNeeded(expectedRequested);
+        expected.setDone(true);
+
+        when(recommendationRequestRepository.findById(3L)).thenReturn(Optional.empty());
+
+        // act
+        MvcResult result = mockMvc.perform(put("/api/recommendationrequests/put?id=3&requesterEmail=requesterEmail&professorEmail=professorEmail&explanation=explanation&dateRequested=2024-04-26T08:08:00&dateNeeded=2024-04-27T08:08:00&done=true")).andExpect(status().is(404)).andReturn();
+
+        // assert
+        verify(recommendationRequestRepository, times(1)).findById(3L);
+        Map<String, Object> response = responseToJson(result);
+        assertEquals("Entity not found", response.get("message"));
+        
+
+
+    }
 
 
     // Tests for POST /api/ucsbdiningcommons...
