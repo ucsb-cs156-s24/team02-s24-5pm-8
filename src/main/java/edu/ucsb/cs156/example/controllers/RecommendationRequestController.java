@@ -96,27 +96,24 @@ public class RecommendationRequestController extends ApiController {
         return genericMessage("record %s deleted".formatted(id));
     }
 
-    @Operation(summary = "Edit a recommendation request")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Update a single recommendation request")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/put")
-    public RecommendationRequest putRecommendationRequest(
-        @Parameter(name = "id") @RequestParam Long id,
-            @RequestBody @Valid RecommendationRequest incoming) 
-        {
-
-        RecommendationRequest request = recommendationRequestRepository.findById(id)
+    public RecommendationRequest updateRecommendationRequest(@Parameter(name = "id") @RequestParam Long id,
+            @RequestBody @Valid RecommendationRequest incoming) {
+        RecommendationRequest recommendationRequest = recommendationRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
 
-        request.setRequesterEmail(incoming.getRequesterEmail());
-        request.setProfessorEmail(incoming.getProfessorEmail());
-        request.setExplanation(incoming.getExplanation());
-        request.setDateRequested(incoming.getDateRequested());
-        request.setDateNeeded(incoming.getDateNeeded());
-        request.setDone(incoming.getDone());
+        recommendationRequest.setRequesterEmail(incoming.getRequesterEmail());
+        recommendationRequest.setProfessorEmail(incoming.getProfessorEmail());
+        recommendationRequest.setExplanation(incoming.getExplanation());
+        recommendationRequest.setDateRequested(incoming.getDateRequested());
+        recommendationRequest.setDateNeeded(incoming.getDateNeeded());
+        recommendationRequest.setDone(incoming.getDone());
 
-        recommendationRequestRepository.save(request);
+        recommendationRequestRepository.save(recommendationRequest);
 
-        return request;
+        return recommendationRequest;
 
     }
 
