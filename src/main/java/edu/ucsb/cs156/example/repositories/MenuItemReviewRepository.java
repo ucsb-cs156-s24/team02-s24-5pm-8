@@ -10,3 +10,5 @@ import java.util.List;
 public interface MenuItemReviewRepository extends CrudRepository<MenuItemReview, Long> {
 
 }
+
+
