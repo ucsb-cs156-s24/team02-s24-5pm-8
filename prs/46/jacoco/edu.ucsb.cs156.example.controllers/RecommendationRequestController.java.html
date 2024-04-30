@@ -85,18 +85,14 @@ import java.time.LocalDateTime;
 
 <span class="fc" id="L86">        return savedRequest;</span>
     }
-/*In RecommendationRequestController.java there is code for an
-endpoint DELETE /api/RecommendationRequest?id=123 endpoint
-that deletes the record if it exists, and returns 200 (ok) and
-the text record 123 deleted, or returns 404 (Not Found) and
-the text record 123 not found if it does not. */
+
     @Operation(summary = &quot;Delete a recommendation request&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @DeleteMapping(&quot;/delete&quot;)
     public Object deleteRecommendationRequest(@Parameter(name = &quot;id&quot;) @RequestParam long id) {
-<span class="fc" id="L97">        RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(RecommendationRequest.class, id));</span>
-<span class="fc" id="L98">        recommendationRequestRepository.delete(request);</span>
-<span class="fc" id="L99">        return genericMessage(&quot;record %s deleted&quot;.formatted(id));</span>
+<span class="fc" id="L93">        RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(RecommendationRequest.class, id));</span>
+<span class="fc" id="L94">        recommendationRequestRepository.delete(request);</span>
+<span class="fc" id="L95">        return genericMessage(&quot;record %s deleted&quot;.formatted(id));</span>
     }
 
 }
