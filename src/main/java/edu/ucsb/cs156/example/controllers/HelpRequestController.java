@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@ public class HelpRequestController extends ApiController {
         return helpRequests;
     }
 
-    @Operation(summary= "Create a help request")
+    @Operation(summary= "Create a new help request")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/post")
     public HelpRequest postHelpRequest(
@@ -70,8 +71,7 @@ public class HelpRequestController extends ApiController {
         return savedHelpRequest;
     }
 
-
-    @Operation(summary= "delete a HelpRequest")
+    @Operation(summary= "Delete a HelpRequest")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("")
     public Object deleteHelpRequest(
@@ -83,8 +83,7 @@ public class HelpRequestController extends ApiController {
         return genericMessage("HelpRequest with id %s deleted".formatted(id));
     }
 
-    
-    @Operation(summary= "update a single help request")
+    @Operation(summary= "Update a single help request")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("")
     public HelpRequest updateHelpRequest(
@@ -107,5 +106,3 @@ public class HelpRequestController extends ApiController {
     }
 
 }
-
-

@@ -60,6 +60,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
         @WithMockUser(roles = { "USER" })
         @Test
         public void logged_in_user_can_get_all_helprequests() throws Exception {
+
                 // arrange
                 LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
 
@@ -79,7 +80,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .teamId("s24-5pm-7")
                                 .tableOrBreakoutRoom("10")
                                 .requestTime(ldt2)
-                                .explanation("need help with dokku")
+                                .explanation("dokku problem")
                                 .solved(true)
                                 .build();
 
@@ -145,12 +146,12 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .andExpect(status().isOk()).andReturn();
 
                 // assert
+
                 verify(helpRequestRepository, times(1)).save(helpRequest1);
                 String expectedJson = mapper.writeValueAsString(helpRequest1);
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
-
 
         // Tests for DELETE /api/helprequest?id=... 
 
@@ -166,7 +167,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .teamId("s24-5pm-8")
                                 .tableOrBreakoutRoom("8")
                                 .requestTime(ldt1)
-                                .explanation("need a help")
+                                .explanation("need help")
                                 .solved(true)
                                 .build();
 
@@ -221,7 +222,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .teamId("s24-5pm-8")
                                 .tableOrBreakoutRoom("8")
                                 .requestTime(ldt1)
-                                .explanation("need a help")
+                                .explanation("need help")
                                 .solved(true)
                                 .build();
 
@@ -230,7 +231,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .teamId("s24-5pm-7")
                                 .tableOrBreakoutRoom("10")
                                 .requestTime(ldt2)
-                                .explanation("need help with dokku")
+                                .explanation("dokku problems")
                                 .solved(false)
                                 .build();
 
@@ -267,7 +268,7 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                                 .teamId("s24-5pm-8")
                                 .tableOrBreakoutRoom("8")
                                 .requestTime(ldt1)
-                                .explanation("need a help")
+                                .explanation("need help")
                                 .solved(false)
                                 .build();
 
