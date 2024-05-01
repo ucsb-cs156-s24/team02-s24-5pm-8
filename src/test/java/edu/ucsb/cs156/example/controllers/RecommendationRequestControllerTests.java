@@ -115,9 +115,6 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
 
 
-
-
-
     //Tests for GET /api/recommendationrequests/get
     @Test
     public void logged_out_users_cannot_get_by_id() throws Exception {
