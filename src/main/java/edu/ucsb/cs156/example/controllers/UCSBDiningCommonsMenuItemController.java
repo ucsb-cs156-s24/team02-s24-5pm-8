@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Tag(name = "UCSBDiningCommonsMenuItem")
+@Tag(name = "UCSBDiningCommonsMenuItem") 
 @RequestMapping("/api/ucsbdiningcommonsmenuitem")
 @RestController
 @Slf4j
@@ -33,7 +33,7 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
     @Autowired
     UCSBDiningCommonsMenuItemRepository ucsbDiningCommonsMenuItemRepository;
 
-    @Operation(summary= "List all ucsb dining commons menu items")
+    @Operation(summary = "List all ucsb dining commons menu items")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/all")
     public Iterable<UCSBDiningCommonsMenuItem> allUCSBDiningCommonsMenuItems() {
@@ -41,13 +41,13 @@ public class UCSBDiningCommonsMenuItemController extends ApiController {
         return menuItems;
     }
 
-    @Operation(summary= "Create a new menu item")
+    @Operation(summary = "Create a new menu item")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/post")
     public UCSBDiningCommonsMenuItem postUCSBDiningCommonsMenuItem(
-            @Parameter(name="diningCommonsCode") @RequestParam String diningCommonsCode,
-            @Parameter(name="name") @RequestParam String name,
-            @Parameter(name="station") @RequestParam String station)
+            @Parameter(name = "diningCommonsCode") @RequestParam String diningCommonsCode,
+            @Parameter(name = "name") @RequestParam String name,
+            @Parameter(name = "station") @RequestParam String station)
             throws JsonProcessingException {
 
         UCSBDiningCommonsMenuItem ucsbDiningCommonsMenuItem = new UCSBDiningCommonsMenuItem();
