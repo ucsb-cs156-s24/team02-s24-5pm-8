@@ -27,7 +27,7 @@
                       "autoIncrement": true,
                       "constraints": {
                         "primaryKey": true,
-                        "primaryKeyName": "CONSTRAINT_7"
+                        "primaryKeyName": "CONSTRAINT_1234567"
                       },
                       "name": "ID",
                       "type": "BIGINT"
@@ -35,7 +35,7 @@
                   },
                   {
                     "column": {
-                      "name": "REQUEST_EMAIL",
+                      "name": "REQUESTER_EMAIL",
                       "type": "VARCHAR(255)"
                     }
                   },
