@@ -139,14 +139,14 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
                                 .orgCode("SPE")
                                 .orgTranslationShort("SIGEP")
                                 .orgTranslation("SIGMAPHIEPSILON")
-                                .inactive(false)
+                                .inactive(true)
                                 .build();
 
                 when(ucsbOrganizationRepository.save(eq(SPE))).thenReturn(SPE);
 
                 // act
                 MvcResult response = mockMvc.perform(
-                                post("/api/ucsborganization/post?orgCode=SPE&orgTranslationShort=SIGEP&orgTranslation=SIGMAPHIEPSILON&inactive=false")
+                                post("/api/ucsborganization/post?orgCode=SPE&orgTranslationShort=SIGEP&orgTranslation=SIGMAPHIEPSILON&inactive=true")
                                                 .with(csrf()))
                                 .andExpect(status().isOk()).andReturn();
 
