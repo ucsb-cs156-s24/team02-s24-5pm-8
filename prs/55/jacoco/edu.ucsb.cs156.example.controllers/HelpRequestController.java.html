@@ -14,9 +14,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +30,8 @@ import java.time.LocalDateTime;
 @Tag(name = &quot;HelpRequest&quot;)
 @RequestMapping(&quot;/api/helprequest&quot;)
 @RestController
-<span class="fc" id="L31">@Slf4j</span>
-<span class="fc" id="L32">public class HelpRequestController extends ApiController {</span>
+<span class="fc" id="L33">@Slf4j</span>
+<span class="fc" id="L34">public class HelpRequestController extends ApiController {</span>
 
     @Autowired
     HelpRequestRepository helpRequestRepository;
@@ -38,11 +40,11 @@ import java.time.LocalDateTime;
     @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
     @GetMapping(&quot;/all&quot;)
     public Iterable&lt;HelpRequest&gt; allHelpRequests() {
-<span class="fc" id="L41">        Iterable&lt;HelpRequest&gt; helpRequests = helpRequestRepository.findAll();</span>
-<span class="fc" id="L42">        return helpRequests;</span>
+<span class="fc" id="L43">        Iterable&lt;HelpRequest&gt; helpRequests = helpRequestRepository.findAll();</span>
+<span class="fc" id="L44">        return helpRequests;</span>
     }
 
-    @Operation(summary= &quot;Create a help request&quot;)
+    @Operation(summary= &quot;Create a new help request&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
     @PostMapping(&quot;/post&quot;)
     public HelpRequest postHelpRequest(
@@ -54,19 +56,54 @@ import java.time.LocalDateTime;
             @Parameter(name=&quot;solved&quot;) @RequestParam boolean solved)
             throws JsonProcessingException {
     
-<span class="fc" id="L57">    log.info(&quot;requestTime={}&quot;, requestTime);</span>
+<span class="fc" id="L59">    log.info(&quot;requestTime={}&quot;, requestTime);</span>
 
-<span class="fc" id="L59">        HelpRequest helpRequest = new HelpRequest();</span>
-<span class="fc" id="L60">        helpRequest.setRequesterEmail(requesterEmail);</span>
-<span class="fc" id="L61">        helpRequest.setTeamId(teamId);</span>
-<span class="fc" id="L62">        helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
-<span class="fc" id="L63">        helpRequest.setRequestTime(requestTime);</span>
-<span class="fc" id="L64">        helpRequest.setExplanation(explanation);</span>
-<span class="fc" id="L65">        helpRequest.setSolved(solved);</span>
+<span class="fc" id="L61">        HelpRequest helpRequest = new HelpRequest();</span>
+<span class="fc" id="L62">        helpRequest.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L63">        helpRequest.setTeamId(teamId);</span>
+<span class="fc" id="L64">        helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
+<span class="fc" id="L65">        helpRequest.setRequestTime(requestTime);</span>
+<span class="fc" id="L66">        helpRequest.setExplanation(explanation);</span>
+<span class="fc" id="L67">        helpRequest.setSolved(solved);</span>
 
-<span class="fc" id="L67">        HelpRequest savedHelpRequest = helpRequestRepository.save(helpRequest);</span>
+<span class="fc" id="L69">        HelpRequest savedHelpRequest = helpRequestRepository.save(helpRequest);</span>
 
-<span class="fc" id="L69">        return savedHelpRequest;</span>
+<span class="fc" id="L71">        return savedHelpRequest;</span>
     }
+
+    @Operation(summary= &quot;Delete a HelpRequest&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @DeleteMapping(&quot;&quot;)
+    public Object deleteHelpRequest(
+            @Parameter(name=&quot;id&quot;) @RequestParam Long id) {
+<span class="fc" id="L79">        HelpRequest helpRequest = helpRequestRepository.findById(id)</span>
+<span class="fc" id="L80">                .orElseThrow(() -&gt; new EntityNotFoundException(HelpRequest.class, id));</span>
+
+<span class="fc" id="L82">        helpRequestRepository.delete(helpRequest);</span>
+<span class="fc" id="L83">        return genericMessage(&quot;HelpRequest with id %s deleted&quot;.formatted(id));</span>
+    }
+
+    @Operation(summary= &quot;Update a single help request&quot;)
+    @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+    @PutMapping(&quot;&quot;)
+    public HelpRequest updateHelpRequest(
+            @Parameter(name=&quot;id&quot;) @RequestParam Long id,
+            @RequestBody @Valid HelpRequest incoming) {
+
+<span class="fc" id="L93">        HelpRequest helpRequest = helpRequestRepository.findById(id)</span>
+<span class="fc" id="L94">                .orElseThrow(() -&gt; new EntityNotFoundException(HelpRequest.class, id));</span>
+
+<span class="fc" id="L96">        helpRequest.setRequesterEmail(incoming.getRequesterEmail());</span>
+<span class="fc" id="L97">        helpRequest.setTeamId(incoming.getTeamId());</span>
+<span class="fc" id="L98">        helpRequest.setTableOrBreakoutRoom(incoming.getTableOrBreakoutRoom());</span>
+<span class="fc" id="L99">        helpRequest.setRequestTime(incoming.getRequestTime());</span>
+<span class="fc" id="L100">        helpRequest.setExplanation(incoming.getExplanation());</span>
+<span class="fc" id="L101">        helpRequest.setSolved(incoming.getSolved());</span>
+
+<span class="fc" id="L103">        helpRequestRepository.save(helpRequest);</span>
+
+<span class="fc" id="L105">        return helpRequest;</span>
+    }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
