@@ -3,7 +3,6 @@ package edu.ucsb.cs156.example.entities;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
-
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -17,16 +16,15 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "helprequest")
-public class HelpRequest {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+@Entity(name = "menuitemreview")
+public class MenuItemReview {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-  private String requesterEmail;
-  private String teamId;
-  private String tableOrBreakoutRoom;
-  private LocalDateTime requestTime;
-  private String explanation;
-  private boolean solved;
-}
+    private long itemId;
+    private String reviewerEmail;
+    private int stars;
+    private LocalDateTime dateReviewed;
+    private String comments;
+  }

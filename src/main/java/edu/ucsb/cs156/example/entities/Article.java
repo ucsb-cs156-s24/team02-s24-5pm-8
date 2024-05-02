@@ -1,9 +1,10 @@
 package edu.ucsb.cs156.example.entities;
 
+// import edu.ucsb.cs156.example.entities.UCSBDate;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
-
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -17,16 +18,15 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "helprequest")
-public class HelpRequest {
+@Entity(name = "article")
+public class Article {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  private String requesterEmail;
-  private String teamId;
-  private String tableOrBreakoutRoom;
-  private LocalDateTime requestTime;
+  private String title;
+  private String url;
   private String explanation;
-  private boolean solved;
+  private String email;
+  private LocalDateTime dateAdded;
 }
