@@ -47,7 +47,7 @@ public class RecommendationRequestController extends ApiController {
 
     @Operation(summary = "Get a recommendation request by ID")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/get")
+    @GetMapping("")
     public RecommendationRequest getRecommendationRequestById(@Parameter(name = "id") @RequestParam long id) {
         RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
         return request;
@@ -89,7 +89,7 @@ public class RecommendationRequestController extends ApiController {
 
     @Operation(summary = "Delete a recommendation request")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/delete")
+    @DeleteMapping("")
     public Object deleteRecommendationRequest(@Parameter(name = "id") @RequestParam long id) {
         RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
         recommendationRequestRepository.delete(request);
@@ -98,7 +98,7 @@ public class RecommendationRequestController extends ApiController {
 
     @Operation(summary = "Update a single recommendation request")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/put")
+    @PutMapping("")
     public RecommendationRequest updateRecommendationRequest(@Parameter(name = "id") @RequestParam Long id,
             @RequestBody @Valid RecommendationRequest incoming) {
         RecommendationRequest recommendationRequest = recommendationRequestRepository.findById(id)
