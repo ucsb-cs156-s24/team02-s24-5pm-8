@@ -47,7 +47,7 @@ import java.time.LocalDateTime;
 
     @Operation(summary = &quot;Get a recommendation request by ID&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
-    @GetMapping(&quot;/get&quot;)
+    @GetMapping(&quot;&quot;)
     public RecommendationRequest getRecommendationRequestById(@Parameter(name = &quot;id&quot;) @RequestParam long id) {
 <span class="fc" id="L52">        RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(RecommendationRequest.class, id));</span>
 <span class="fc" id="L53">        return request;</span>
@@ -89,7 +89,7 @@ import java.time.LocalDateTime;
 
     @Operation(summary = &quot;Delete a recommendation request&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
-    @DeleteMapping(&quot;/delete&quot;)
+    @DeleteMapping(&quot;&quot;)
     public Object deleteRecommendationRequest(@Parameter(name = &quot;id&quot;) @RequestParam long id) {
 <span class="fc" id="L94">        RecommendationRequest request = recommendationRequestRepository.findById(id).orElseThrow(() -&gt; new EntityNotFoundException(RecommendationRequest.class, id));</span>
 <span class="fc" id="L95">        recommendationRequestRepository.delete(request);</span>
@@ -98,7 +98,7 @@ import java.time.LocalDateTime;
 
     @Operation(summary = &quot;Update a single recommendation request&quot;)
     @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
-    @PutMapping(&quot;/put&quot;)
+    @PutMapping(&quot;&quot;)
     public RecommendationRequest updateRecommendationRequest(@Parameter(name = &quot;id&quot;) @RequestParam Long id,
             @RequestBody @Valid RecommendationRequest incoming) {
 <span class="fc" id="L104">        RecommendationRequest recommendationRequest = recommendationRequestRepository.findById(id)</span>
