@@ -100,6 +100,48 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(expectedJson, responseString);
         }
+        // Tests for GET /api/helprequest?id=...
+
+        @Test
+        public void logged_out_users_cannot_get_by_id() throws Exception {
+                mockMvc.perform(get("/api/helprequest?id=15"))
+                                .andExpect(status().is(403)); // logged out users can't get by id
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void logged_in_users_cannot_get_by_id() throws Exception {
+                mockMvc.perform(get("/api/helprequest?id=15"))
+                                .andExpect(status().is(404)); // logged in users can't get by id
+        }
+
+        @WithMockUser(roles = { "USER" })
+        @Test
+        public void logged_in_users_can_get_by_id() throws Exception {
+                LocalDateTime ldt1 = LocalDateTime.parse("2022-01-03T00:00:00");
+
+                HelpRequest helpRequest1 = new HelpRequest();
+                helpRequest1.setId(15L);
+                helpRequest1.setRequesterEmail("asd");
+                helpRequest1.setTeamId("asd");
+                helpRequest1.setTableOrBreakoutRoom("asd");
+                helpRequest1.setRequestTime(ldt1);
+                helpRequest1.setExplanation("asd");
+                helpRequest1.setSolved(true);
+
+                when(helpRequestRepository.findById(eq(15L))).thenReturn(Optional.of(helpRequest1));
+
+
+                MvcResult response = mockMvc.perform(get("/api/helprequest?id=15")).andExpect(status().is(200)).andReturn(); // logged in users can get by id
+
+                verify(helpRequestRepository, times(1)).findById(15L);
+                String expectedJson = mapper.writeValueAsString(helpRequest1);
+                String responseString = response.getResponse().getContentAsString();
+                assertEquals(expectedJson, responseString);
+        }
+
+        @WithMockUser(roles = { "USER" })
+
 
         // Tests for POST /api/ucsbdates/post...
 
@@ -254,7 +296,6 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                 String responseString = response.getResponse().getContentAsString();
                 assertEquals(requestBody, responseString);
         }
-
         
         @WithMockUser(roles = { "ADMIN", "USER" })
         @Test
